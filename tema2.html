@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editor de Grafuri</title>
+  <style>
+    #network {
+      width: 100%;
+      height: 80vh; /* Actualizare: Schimbă înălțimea aici */
+    }
+  </style>
+  <link href="https://unpkg.com/vis-network/standalone/umd/vis-network.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+  <div id="network"></div>
+  <button onclick="addNode()">Adaugă Nod</button>
+  <button onclick="addEdge()">Adaugă Muchie</button>
+  <button onclick="editNode()">Editează Nod</button>
+  <button onclick="editEdge()">Editează Muchie</button>
+  <button onclick="deleteSelected()">Șterge Selectat</button>
+  <script type="text/javascript">
+    var nodes = new vis.DataSet();
+    var edges = new vis.DataSet();
+    var container = document.getElementById('network');
+    var data = {
+      nodes: nodes,
+      edges: edges
+    };
+    var options = {
+      interaction: {
+        dragNodes: true
+      }
+    };
+    var network = new vis.Network(container, data, options);
+
+    function addNode() {
+      var id = prompt("Introduceți ID-ul nodului:");
+      var label = prompt("Introduceți eticheta nodului:");
+      if (id != null && label != null) {
+        var node = { id: id, label: label };
+        nodes.add(node);
+      }
+    }
+
+    function addEdge() {
+      var from = prompt("Introduceți ID-ul nodului de la:");
+      var to = prompt("Introduceți ID-ul nodului către:");
+      var label = prompt("Introduceți eticheta muchiei:");
+      if (from != null && to != null && label != null) {
+        var edge = { from: from, to: to, label: label };
+        edges.add(edge);
+      }
+    }
+
+    function editNode() {
+      var id = prompt("Introduceți ID-ul nodului de editat:");
+      var label = prompt("Introduceți noua etichetă a nodului:");
+      if (id != null && label != null) {
+        var node = nodes.get(id);
+        if (node != null) {
+          node.label = label;
+          nodes.update(node);
+        }
+      }
+    }
+
+    function editEdge() {
+      var id = prompt("Introduceți ID-ul muchiei de editat:");
+      var label = prompt("Introduceți noua etichetă a muchiei:");
+      if (id != null && label != null) {
+        var edge = edges.get(id);
+        if (edge != null) {
+          edge.label = label;
+          edges.update(edge);
+        }
+      }
+    }
+
+    function deleteSelected() {
+      var selectedNodes = network.getSelection().nodes;
+      var selectedEdges = network.getSelection().edges;
+      nodes.remove(selectedNodes);
+      edges.remove(selectedEdges);
+    }
+  </script>
+</body>
+</html>
